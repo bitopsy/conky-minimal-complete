@@ -8,7 +8,7 @@ mkdir -p "$THEME/helpers"
 cp conkyrc "$HOME/.conkyrc"
 cp helpers/helpers.lua "$THEME/helpers/"
 
-sed -i "s|\$HOME/.config/conky/minimal/helpers.lua|$THEME/helpers/helpers.lua|g" "$HOME/.conkyrc"
+sed -i "s|LUA_LOAD_PATH|$THEME/helpers/helpers.lua|g" "$HOME/.conkyrc"
 
 echo "// detecting network interface..."
 IFACE=$(ip -o -4 route show default 2>/dev/null | awk '{print $5}' | head -1)
