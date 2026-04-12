@@ -1,75 +1,91 @@
-##Feel free to edit and make your own. 
-conky.config = { 
+-- ═══════════════════════════════════════════════════════════════
+--   A L A g r A p H Y   S t u d i o s
+--   Conky Minimal Complete — Tree-Style System Monitor
+--   Compatible with Conky 1.10+ (Lua syntax)
+-- ═══════════════════════════════════════════════════════════════
+--
+--   Auto-detects default network interface.
+--   Override: set IFACE in the environment or edit the
+--   lua_load line to point at a custom helper.
+-- ═══════════════════════════════════════════════════════════════
 
-	background = true,
-	use_xft = true,
-	font = 'monospace:size=8',
-	xftalpha = 0.8,
-	update_interval = 0.5,
-	total_run_times = 0,
-	own_window = true,
-	own_window_transparent = true,
-	own_window_type = 'normal',
-	own_window_class = 'conky',
-	own_window_argb_visual = true,
---	own_window_colour = '#2e3436',
---      own_window_argb_value = 120,
-	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
-	double_buffer = true,
-	draw_shades = false,
-	draw_outline = false,
-	draw_borders = false,
-	draw_graph_borders = true,
-	stippled_borders = 1,
-	border_width = 1,
-	default_color = 'pink', #'#2e3436',
-	default_shade_color = 'gray',
-	default_outline_color = 'black',
-	alignment = 'top_right',
-	gap_x = 15,
-	gap_y = 145,
+conky.config = {
 
--- Misc Console #
-   out_to_console = false,
-   out_to_stderr = false,
-   extra_newline = false,
+    background              = true,
+    use_xft                 = true,
+    font                    = 'monospace:size=8',
+    xftalpha                = 0.8,
+    update_interval         = 1.0,
+    total_run_times         = 0,
 
-   no_buffers = true,
-   cpu_avg_samples = 2,
-   net_avg_samples = 2,
-   override_utf8_locale = true,
-   use_spacer = 'right',
-   maximum_width = 700,
-   minimum_height = 800,
-   uppercase = true,
+    own_window              = true,
+    own_window_transparent  = false,
+    own_window_type         = 'normal',
+    own_window_class        = 'conky',
+    own_window_argb_visual  = true,
+    own_window_argb_value   = 0,
+    own_window_colour       = '#000000',
+    own_window_hints        = 'undecorated,below,sticky,skip_taskbar,skip_pager',
 
+    double_buffer           = true,
+    draw_graph_borders      = true,
+
+    default_color           = '#FF6B9D',
+    default_shade_color     = '#666666',
+    default_outline_color   = '#000000',
+
+    color0 = '#FF6B9D',   -- pink       primary
+    color1 = '#FFB86C',   -- orange     accent
+    color2 = '#BA8D01',   -- gold       graph gradient end
+    color3 = '#C44400',   -- red-orange graph gradient start
+    color4 = '#DCE6EB',   -- near-white data values
+
+    alignment               = 'top_right',
+    gap_x                   = 15,
+    gap_y                   = 145,
+
+    no_buffers              = true,
+    cpu_avg_samples         = 2,
+    net_avg_samples         = 2,
+    override_utf8_locale    = true,
+    use_spacer              = 'right',
+    maximum_width           = 700,
+    minimum_height          = 800,
+    uppercase                = true,
+
+    out_to_console          = false,
+    out_to_stderr           = false,
+    extra_newline           = false,
+
+    lua_load                = '$HOME/.config/conky/minimal/helpers.lua',
 };
+
 conky.text = [[
-#leet chars: ┤┤└└┴┴┐┐││┘┘┌┌├├┬┬┼┼┴┴── ││ ▽▼△▲▵▴▾▿
-${alignc}${offset -4}${font xftfont montserrat:size=10} A L A g r A p H Y   S t u d i o s ${font}
+# leet chars: ┤┤└└┴┴┐┐││┘┘┌┌├├┬┬┼┼┴┴── ││ ▽▼△▲▵▴▾▿
+${alignc}${offset -4}${font monospace:size=10} A L A g r A p H Y   S t u d i o s ${font}
 ${alignr}${offset -6}└──────────┐
 ${alignr}${offset -6}date/time ─┤
-${alignr}${offset -6}< ${time %B %d %Y}${font} > ─┤   │
-${alignr}${offset -6}< ${time %I:%M %p}${font} > ─┘   │
+${alignr}${offset -6}< ${time %B %d %Y} > ─┤   │
+${alignr}${offset -6}< ${time %I:%M %p} > ─┘   │
 ${alignr}${offset -6}│
-${alignr}${offset -6}${exec lsb_release -si} ${machine} ─┤
+${alignr}${offset -6}${execi 3600 lsb_release -si 2>/dev/null || awk -F= '/^NAME/{gsub(/"/,"",$2);print $2;exit}' /etc/os-release} ${machine} ─┤
 ${alignr}${offset -6}< ${kernel} > Kernel ─┤   │
 ${alignr}${offset -6}< ${uptime} > Uptime ─┤   │
 ${alignr}${offset -6}│
 ${alignr}${offset -6}system ─┤
-${alignr}${offset -6}< ${execi 1000 cat /proc/cpuinfo|grep 'model name'|sed -e 's/model name.*: //'| uniq | cut -c 1-24} > CPU ─┤   │
+${alignr}${offset -6}< ${execi 1000 awk -F: '/model name/{gsub(/^ +/,"",$2);print $2;exit}' /proc/cpuinfo | cut -c1-24} > CPU ─┤   │
 ${alignr}${offset -6}│   │   │
 ${alignr}${offset -6}used ─┤   │   │
-${alignr}${offset -6}< ${cpu cpu 0}% > cpu0 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 1}% > cpu1 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 2}% > cpu2 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 3}% > cpu3 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 4}% > cpu4 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 5}% > cpu5 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 6}% > cpu6 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 7}% > cpu7 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 8}% > cpu8 ─┤   │   │   │
-${alignr}${offset -6}< ${cpu cpu 9}% > cpu9 ─┘   │   │   │
+${alignr}${offset -6}< ${cpu cpu0}% > cpu0 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu1}% > cpu1 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu2}% > cpu2 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu3}% > cpu3 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu4}% > cpu4 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu5}% > cpu5 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu6}% > cpu6 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu7}% > cpu7 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu8}% > cpu8 ─┤   │   │   │
+${alignr}${offset -6}< ${cpu cpu9}% > cpu9 ─┘   │   │   │
 ${alignr}${offset -6}│   │   │
 ${alignr}${offset -6}< $loadavg > load ─┤   │   │
 ${alignr}${offset -6}< ${top name 1} ${top cpu 1} > ─┤   │   │
@@ -85,22 +101,18 @@ ${alignr}${offset -6}Processes ─┤   │
 ${alignr}${offset -6}< $processes > ─ < $running_processes > ─┘   │   │
 ${alignr}${offset -6}│   │
 ${alignr}${offset -6}Graphics ─┤   │
-${alignr}${color1}GPU:${color FCAF3E}${exec nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits} $color  ─┤   │   │
-${alignr}${color1}GPU Temperature ${color}  ${execi 60 nvidia-settings -query [gpu:0]/GPUCoreTemp -t} °C  ─┤   │   │
-${alignr}${color1}GPU Utilization ${color}  ${exec nvidia-smi | grep % | cut -c 61-63} %   ─┤   │   │
-${alignr}${color1}VRAM Utilization ${color} ${exec nvidia-smi | grep % | cut -c 37-40} MB  ─┤   │   │
-${alignr}${color1}GPU Power Draw ${color} ${exec nvidia-smi | grep % | cut -c 21-23} W  ─┤   │   │
+${lua_parse gpu_section}
 ${alignr}${offset -6}│   │
 ${alignr}${offset -6}Memory ─┤   │
 ${alignr}${offset -6}< $memperc% > used ─┤   │   │
 ${alignr}${offset -6}< $mem/$memmax > ─┘    │   │   │
-${alignr}${offset -6}< ${top name 1} ${top mem 1} > ─┤   │   │
-${alignr}${offset -6}< ${top name 2} ${top mem 2} > ─┤   │   │
-${alignr}${offset -6}< ${top name 3} ${top mem 3} > ─┤   │   │
-${alignr}${offset -6}< ${top name 4} ${top mem 4} > ─┤   │   │
-${alignr}${offset -6}< ${top name 5} ${top mem 5} > ─┤   │   │
-${alignr}${offset -6}< ${top name 6} ${top mem 6} > ─┤   │   │
-${alignr}${offset -6}< ${top name 7} ${top mem 7} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 1} ${top_mem mem 1} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 2} ${top_mem mem 2} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 3} ${top_mem mem 3} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 4} ${top_mem mem 4} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 5} ${top_mem mem 5} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 6} ${top_mem mem 6} > ─┤   │   │
+${alignr}${offset -6}< ${top_mem name 7} ${top_mem mem 7} > ─┤   │   │
 ${alignr}${offset -32} ${memgraph 16,120 c44400 ba8d01}  > ─┘   │   │
 ${alignr}${offset -6}│   │
 ${alignr}${offset -6}Disk Usage ─┘   │
@@ -112,12 +124,6 @@ ${alignr}${offset -6}< ${fs_used /home}/${fs_size /home} > /home ─┘       �
 ${alignr}${offset -6}< ${fs_bar 5,120 /home} > ─┘             │
 ${alignr}${offset -6}Network ─┘
 ${alignr}${offset -32}< $nodename > hostname ─┤
-${alignr}${offset -32}< ${execi 60 wget -qO- ifconfig.co} > Wan ─┤
-${alignr}${offset -32}< ${addr enp27s0} > Lan ─┤
-${alignr}${offset -32}< ${downspeed enp27s0} > ${totaldown enp27s0} ▼ download ─┤
-${alignr}${offset -32}< ${downspeedgraph enp27s0 16,120 c44400 ba8d01} > ─┘    │
-${alignr}${offset -32}< ${upspeed enp27s0} > ${totalup enp27s0}   ▲ upload ─┘
-${alignr}${offset -62}< ${upspeedgraph enp5s0 16,120 c44400 ba8d01} > ─┘
-
+${alignr}${offset -32}< ${execi 60 curl -s --max-time 5 ifconfig.co 2>/dev/null || echo "N/A"} > Wan ─┤
+${lua_parse net_section}
 ]];
-
